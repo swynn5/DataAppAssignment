@@ -9,8 +9,15 @@ st.write("### Input Data and Examples")
 df = pd.read_csv("Superstore_Sales_utf8.csv", parse_dates=True)
 st.dataframe(df)
 
-# Dropdown for Category
-category_selected = st.selectbox("Select a Category", df["Category"].unique())
+#Dropdown for Category using the specified format
+category_selected = st.selectbox(
+    "Select a Category",
+    df["Category"].unique(),
+    index=None,
+    placeholder="Select a category..."
+)
+
+st.write("You selected:", category_selected)
 
 # Filter data based on selected category
 df_filtered = df[df["Category"] == category_selected]
