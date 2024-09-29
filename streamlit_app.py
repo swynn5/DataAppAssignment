@@ -25,12 +25,16 @@ st.write("You selected:", category_selected)
 df_filtered = df[df["Category"] == category_selected]
 
 # 2 - Multi-select for Sub_Category in the selected Category
+# Section: Sub-Category Selection
+st.write("### Sub-Category Selection")
 subcategories_selected = st.multiselect("Select one or multiple sub-categories", df_filtered["Sub_Category"].unique())
 
 # Filter data based on selected sub_categories
 df_final = df_filtered[df_filtered["Sub_Category"].isin(subcategories_selected)]
 
 # 3 - Line chart of sales for selected sub-categories
+# Section: Sales Trend Visualization
+st.write("### Sales Trend Visualization")
 if not df_final.empty:
     df_final["Order_Date"] = pd.to_datetime(df_final["Order_Date"])
     df_final.set_index('Order_Date', inplace=True)
@@ -38,6 +42,8 @@ if not df_final.empty:
     st.line_chart(sales_by_month_filtered, y="Sales")
 
 # (4) Calculate metrics for the selected items
+# Section: Metrics Calculation
+st.write("### Metrics Calculation")
 if not df_final.empty:
     total_sales = df_final["Sales"].sum()
     total_profit = df_final["Profit"].sum()
@@ -54,7 +60,8 @@ if not df_final.empty:
     st.metric(label="Total Profit", value=f"${total_profit:,.2f}")
     st.metric(label="Overall Profit Margin (%)", value=f"{overall_profit_margin:.2f}%", delta=f"{delta_profit_margin:.2f}%")
 
-
+# Section: Overall Sales Visualization
+st.write("### Overall Sales Visualization")
 # This bar chart will not have solid bars--but lines--because the detail data is being graphed independently
 st.bar_chart(df, x="Category", y="Sales")
 
