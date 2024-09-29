@@ -23,7 +23,7 @@ st.write("You selected:", category_selected)
 df_filtered = df[df["Category"] == category_selected]
 
 # Multi-select for Sub_Category in the selected Category
-subcategories_selected = st.multiselect("Select a Sub-Categories", df_filtered["Sub_Category"].unique())
+subcategories_selected = st.multiselect("Select a Sub-Category", df_filtered["Sub_Category"].unique())
 
 # Filter data based on selected sub_categories
 df_final = df_filtered[df_filtered["Sub_Category"].isin(subcategories_selected)]
