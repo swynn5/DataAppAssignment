@@ -35,24 +35,31 @@ if not df_final.empty:
     sales_by_month_filtered = df_final.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
     st.line_chart(sales_by_month_filtered, y="Sales")
 
-# 4 - Calculate metrics for the selected items
-if not df_final.empty:
-    total_sales = df_final["Sales"].sum()
-    total_profit = df_final["Profit"].sum()
-    overall_profit_margin = (total_profit / total_sales) * 100 if total_sales > 0 else 0
+# (2) Check if df_filtered is not empty before proceeding
+if not df_filtered.empty:
+    subcategories_selected = st.multiselect("Select Sub-Categories", df_filtered["sub_category"].unique())
+    st.write("You selected:", subcategories_selected)
 
-    # Calculate overall profit margin for all products across all categories
-    total_sales_all = df["Sales"].sum()
-    total_profit_all = df["Profit"].sum()
-    overall_profit_margin_all = (total_profit_all / total_sales_all) * 100 if total_sales_all > 0 else 0
-    delta_profit_margin = overall_profit_margin - overall_profit_margin_all
+    # Further filtering for selected sub-categories
+    df_final = df_filtered[df_filtered["sub_category"].isin(subcategories_selected)]
+    
+    if not df_final.empty:
+        # (3) Calculate metrics
+        total_sales = df_final["Sales"].sum()
+        total_profit = df_final["Profit"].sum()
+        overall_profit_margin = (total_profit / total_sales) * 100 if total_sales > 0 else 0
 
-# 4 - Display metrics with delta
-    st.metric(label="Total Sales", value=f"${total_sales:,.2f}")
-    st.metric(label="Total Profit", value=f"${total_profit:,.2f}")
-    st.metric(label="Overall Profit Margin (%)", value=f"{overall_profit_margin:.2f}%", delta=f"{delta_profit_margin:.2f}%")
+        # Calculate overall profit margin for all products across all categories
+        total_sales_all = df["Sales"].sum()
+        total_profit_all = df["Profit"].sum()
+        overall_profit_margin_all = (total_profit_all / total_sales_all) * 100 if total_sales_all > 0 else 0
+        delta_profit_margin = overall_profit_margin - overall_profit_margin_all
 
-else:
+        # (4) Display metrics with delta
+        st.metric(label="Total Sales", value=f"${total_sales:,.2f}")
+        st.metric(label="Total Profit", value=f"${total_profit:,.2f}")
+        st.metric(label="Overall Profit Margin (%)", value=f"{overall_profit_margin:.2f}%", delta=f"{delta_profit_margin:.2f}%")
+    else:
         st.write("No data available for the selected sub-categories.")
 else:
     st.write("No data available for the selected category.")
