@@ -10,6 +10,8 @@ df = pd.read_csv("Superstore_Sales_utf8.csv", parse_dates=True)
 st.dataframe(df)
 
 # 1 - Dropdown for Category using the specified format
+# Section: Category Selection
+st.write("### Category Selection")
 category_selected = st.selectbox(
     "Select a Category",
     df["Category"].unique(),
