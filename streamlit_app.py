@@ -52,17 +52,10 @@ if not df_final.empty:
     st.metric(label="Total Profit", value=f"${total_profit:,.2f}")
     st.metric(label="Overall Profit Margin (%)", value=f"{overall_profit_margin:.2f}%", delta=f"{delta_profit_margin:.2f}%")
 
-# Existing visualizations for reference
-st.bar_chart(df, x="Category", y="Sales")
-st.dataframe(df.groupby("Category").sum())
-st.bar_chart(df.groupby("Category", as_index=False).sum(), x="Category", y="Sales", color="#04f")
-
-df["Order_Date"] = pd.to_datetime(df["Order_Date"])
-df.set_index('Order_Date', inplace=True)
-sales_by_month = df.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
-
-st.dataframe(sales_by_month)
-st.line_chart(sales_by_month, y="Sales")
+else:
+        st.write("No data available for the selected sub-categories.")
+else:
+    st.write("No data available for the selected category.")
 
 # This bar chart will not have solid bars--but lines--because the detail data is being graphed independently
 st.bar_chart(df, x="Category", y="Sales")
