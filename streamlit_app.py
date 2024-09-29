@@ -9,7 +9,7 @@ st.write("### Input Data and Examples")
 df = pd.read_csv("Superstore_Sales_utf8.csv", parse_dates=True)
 st.dataframe(df)
 
-#Dropdown for Category using the specified format
+# 1 - Dropdown for Category using the specified format
 category_selected = st.selectbox(
     "Select a Category",
     df["Category"].unique(),
@@ -22,20 +22,30 @@ st.write("You selected:", category_selected)
 # Filter data based on selected category
 df_filtered = df[df["Category"] == category_selected]
 
-# Multi-select for Sub_Category in the selected Category
+# 2 - Multi-select for Sub_Category in the selected Category
 subcategories_selected = st.multiselect("Select one or multiple sub-categories", df_filtered["Sub_Category"].unique())
 
 # Filter data based on selected sub_categories
 df_final = df_filtered[df_filtered["Sub_Category"].isin(subcategories_selected)]
 
-# Line chart of sales for selected sub-categories
+# 3 - Line chart of sales for selected sub-categories
 if not df_final.empty:
     df_final["Order_Date"] = pd.to_datetime(df_final["Order_Date"])
     df_final.set_index('Order_Date', inplace=True)
     sales_by_month_filtered = df_final.filter(items=['Sales']).groupby(pd.Grouper(freq='M')).sum()
     st.line_chart(sales_by_month_filtered, y="Sales")
 
+# 4 - Calculate metrics for the selected items
+if not df_final.empty:
+    total_sales = df_final["Sales"].sum()
+    total_profit = df_final["Profit"].sum()
+    overall_profit_margin = (total_profit / total_sales) * 100 if total_sales > 0 else 0
 
+    # Calculate overall profit margin for all products across all categories
+    total_sales_all = df["Sales"].sum()
+    total_profit_all = df["Profit"].sum()
+    overall_profit_margin_all = (total_profit_all / total_sales_all) * 100 if total_sales_all > 0 else 0
+    delta_profit_margin = overall_profit_margin - overall_profit_margin_all
 
 # This bar chart will not have solid bars--but lines--because the detail data is being graphed independently
 st.bar_chart(df, x="Category", y="Sales")
