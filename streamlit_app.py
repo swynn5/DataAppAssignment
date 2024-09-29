@@ -22,6 +22,12 @@ st.write("You selected:", category_selected)
 # Filter data based on selected category
 df_filtered = df[df["Category"] == category_selected]
 
+# Multi-select for Sub-Category in the selected Category
+subcategories_selected = st.multiselect("Select Sub-Categories", df_filtered["Sub-Category"].unique())
+
+# Filter data based on selected sub-categories
+df_final = df_filtered[df_filtered["Sub-Category"].isin(subcategories_selected)]
+
 # This bar chart will not have solid bars--but lines--because the detail data is being graphed independently
 st.bar_chart(df, x="Category", y="Sales")
 
